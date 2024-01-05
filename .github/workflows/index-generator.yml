@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Generate Index HTML
       run: |
@@ -31,6 +31,8 @@ jobs:
 
     - name: Commit and Push Changes
       run: |
-        git add index.html
-        git commit -m "Generate index.html" || true
-        git push
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Generate Index Of index.html"
+          git push
