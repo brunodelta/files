@@ -1,0 +1,38 @@
+name: Generate Index HTML
+
+on:
+  push:
+    branches:
+      - main  # ajuste conforme sua branch principal
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Generate Index HTML
+      run: |
+        echo "<!DOCTYPE html>" > index.html
+        echo "<html lang=\"pt-BR\">" >> index.html
+        echo "<head>" >> index.html
+        echo "    <meta charset=\"UTF-8\">" >> index.html
+        echo "    <title>Index of Files</title>" >> index.html
+        echo "</head>" >> index.html
+        echo "<body>" >> index.html
+        echo "    <h1>Index of Files</h1>" >> index.html
+        echo "    <ul>" >> index.html
+        find . -maxdepth 1 -type f -exec sh -c 'echo "        <li><a href=\"{}\">$(basename "{}")</a></li>"' \; >> index.html
+        echo "    </ul>" >> index.html
+        echo "</body>" >> index.html
+        echo "</html>" >> index.html
+
+    - name: Commit and Push Changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add index.html
+        git commit -m "Generate index.html" || true
+        git push
